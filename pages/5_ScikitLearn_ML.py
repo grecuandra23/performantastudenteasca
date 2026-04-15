@@ -203,7 +203,9 @@ if len(cols_features) < 1:
     st.warning("Selectează cel puțin o variabilă predictor.")
 else:
     df_model = df[cols_features + ['Nota_Finala']].dropna().copy()
-    df_model['Promovat'] = (df_model['Nota_Finala'] >= 10).astype(int)
+    # prag adaptat automat: 5 dacă notele sunt pe 1-10, 10 dacă sunt pe 0-20
+    prag = 5 if df_model['Nota_Finala'].max() <= 10 else 10
+    df_model['Promovat'] = (df_model['Nota_Finala'] >= prag).astype(int)
 
     X = df_model[cols_features]
     y = df_model['Promovat']
