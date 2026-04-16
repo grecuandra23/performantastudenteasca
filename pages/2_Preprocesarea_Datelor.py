@@ -271,36 +271,6 @@ for col in categorical_cols:
         df_pas3 = df_pas3.drop(columns=[col])
 
 # ══════════════════════════════════════════════════════════════════
-# PASUL 3b — CONVERSIE NOTE LA SISTEM ROMÂNESC (0–20 → 1–10)
-# formula: nota_ro = nota / 2, clip(lower=1) asigură minimul 1
-# ══════════════════════════════════════════════════════════════════
-st.markdown("---")
-st.subheader("Conversie note la sistemul românesc (1–10)")
-st.markdown(
-    "Notele originale sunt pe scara **0–20** (sistem portughez). "
-    "Poți converti coloanele de note la scara **1–10** prin formula: `nota_ro = nota / 2` (minim 1)."
-)
-
-cols_note = [c for c in ["Nota_T1", "Nota_T2", "Nota_Finala"] if c in df_pas3.columns]
-
-if cols_note:
-    conversie_note = st.radio(
-        "Convertești notele la sistemul românesc 1–10?",
-        ["Nu", "Da"],
-        horizontal=True,
-        key="nota_ro_global"
-    )
-
-    if conversie_note == "Da":
-        for col in cols_note:
-            df_pas3[col] = (df_pas3[col] / 2).clip(lower=1).round(2)
-
-    with st.expander("Previzualizare note după conversie"):
-        st.dataframe(df_pas3[cols_note].describe().round(2), use_container_width=True)
-else:
-    st.info("Nu au fost găsite coloane de note (Nota_T1, Nota_T2, Nota_Finala).")
-
-# ══════════════════════════════════════════════════════════════════
 # REZULTAT FINAL
 # df.head(nr) → primele nr rânduri din DataFrame
 # ══════════════════════════════════════════════════════════════════
@@ -361,12 +331,6 @@ with col3:
         for c in categorical_cols:
             m = st.session_state.get(f"enc_{c}", "N/A")
             st.markdown(f"- `{c}` → **{m}**")
-
-    cols_note = [c for c in ["Nota_T1", "Nota_T2", "Nota_Finala"] if c in df_pas2.columns]
-    if cols_note:
-        conv = st.session_state.get("nota_ro_global", "Nu")
-        scara = "1–10 (românesc)" if conv == "Da" else "0–20 (original)"
-        st.markdown(f"- Note ({', '.join(f'`{c}`' for c in cols_note)}) → **{scara}**")
 
     st.markdown(f"- Coloane finale: **{len(df_pas3.columns)}**")
 
