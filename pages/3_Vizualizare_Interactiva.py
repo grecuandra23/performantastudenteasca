@@ -40,7 +40,7 @@ df_original = st.session_state["df"]
 df_procesat = st.session_state.get("df_procesat", None)
 
 # ── Selectare mod vizualizare ─────────────────────────────────────
-mod_viz = st.selectbox("Mod vizualizare:", ["Date originale", "Date preprocesate"])
+mod_viz = st.selectbox("Mod vizualizare:", ["Date originale", "Date preprocesate"], key="mod_viz_select")
 
 if mod_viz == "Date originale":
     df = df_original
@@ -59,24 +59,37 @@ elif mod_viz == "Date preprocesate":
 # ══════════════════════════════════════════════════════════════════
 st.markdown("### Statistici generale")
 
-pct_meditatii = (df['Meditatii_Private'] == 'Da').sum() / len(df) * 100
-pct_familie   = (df['Ajutor_Familie'] == 'Da').sum() / len(df) * 100
-pct_bursa     = (df['Meditatii_Scoala'] == 'Da').sum() / len(df) * 100 if 'Meditatii_Scoala' in df.columns else 0
+def _pct_da(df, col):
+    """Calculeaza procentul de 'Da' indiferent daca coloana e string sau encodata."""
+    if col not in df.columns:
+        return None
+    if df[col].dtype == object:
+        return (df[col] == 'Da').sum() / len(df) * 100
+    # Dupa Label Encoding 'Da' < 'Nu' alfabetic → 'Da' = 0
+    return (df[col] == 0).sum() / len(df) * 100
+
+pct_meditatii = _pct_da(df, 'Meditatii_Private')
+pct_familie   = _pct_da(df, 'Ajutor_Familie')
+pct_bursa     = _pct_da(df, 'Meditatii_Scoala') if 'Meditatii_Scoala' in df.columns else None
+
+nota_ro = st.session_state.get("nota_ro_global", "Nu") == "Da" and mod_viz == "Date preprocesate"
+scala_max  = 10 if nota_ro else 20
+prag_prom  = 5  if nota_ro else 10
 
 c1, c2, c3 = st.columns(3)
 c1.metric("Total studenti", len(df))
-c2.metric("Medie nota finala", f"{df['Nota_Finala'].mean():.1f} / 20")
+c2.metric("Medie nota finala", f"{df['Nota_Finala'].mean():.1f} / {scala_max}")
 c3.metric("Varsta medie", f"{df['Varsta'].mean():.1f}")
 
 c4, c5, c6 = st.columns(3)
-c4.metric("Pregatire privata", f"{pct_meditatii:.1f}%")
-c5.metric("Suport familie", f"{pct_familie:.1f}%")
+c4.metric("Pregatire privata", f"{pct_meditatii:.1f}%" if pct_meditatii is not None else "N/A")
+c5.metric("Suport familie",    f"{pct_familie:.1f}%"   if pct_familie   is not None else "N/A")
 c6.metric("Medie absente", f"{df['Absente'].mean():.1f}")
 
 c7, c8, c9 = st.columns(3)
-c7.metric("Meditatii scoala", f"{pct_bursa:.1f}%")
-c8.metric("Promovati (≥10)", (df['Nota_Finala'] >= 10).sum())
-c9.metric("Nepromovati (<10)", (df['Nota_Finala'] < 10).sum())
+c7.metric("Meditatii scoala", f"{pct_bursa:.1f}%" if pct_bursa is not None else "N/A")
+c8.metric(f"Promovati (≥{prag_prom})",  (df['Nota_Finala'] >= prag_prom).sum())
+c9.metric(f"Nepromovati (<{prag_prom})", (df['Nota_Finala'] <  prag_prom).sum())
 
 st.markdown("---")
 
@@ -158,7 +171,8 @@ st.markdown("### Comparatie A vs B")
 criteriu = st.radio(
     "Alege criteriul de comparatie:",
     ["Scoala", "Sex", "Mediu", "Meditatii_Private", "Internet", "Ajutor_Familie"],
-    horizontal=True
+    horizontal=True,
+    key="criteriu_comp"
 )
 
 valori = list(df[criteriu].unique())

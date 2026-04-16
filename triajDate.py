@@ -42,5 +42,6 @@ print("Dimensiune dataset:", df.shape)
 print(df.head())
 df[['Nota_T1', 'Nota_T2', 'Nota_Finala']] = df[['Nota_T1', 'Nota_T2', 'Nota_Finala']].replace(0, np.nan)
 
+
 df.to_csv('student_procesat.csv', index=False)
 print("Salvat cu succes!")
