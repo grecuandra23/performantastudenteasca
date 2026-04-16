@@ -270,6 +270,20 @@ for col in categorical_cols:
         df_pas3 = pd.concat([df_pas3, dummies], axis=1)
         df_pas3 = df_pas3.drop(columns=[col])
 
+# Scala note (Nota_T1, Nota_T2, Nota_Finala)
+cols_note = [c for c in ["Nota_T1", "Nota_T2", "Nota_Finala"] if c in df_pas3.columns]
+if cols_note:
+    st.markdown("**Scale note**")
+    scala_note = st.selectbox(
+        "Nota_T1 / Nota_T2 / Nota_Finala",
+        ["Sistem portughez (0–20)", "Sistem românesc (1–10)"],
+        key="scala_note"
+    )
+    if scala_note == "Sistem românesc (1–10)":
+        # nota_ro = nota / 2, clip(lower=1) asigură minimul 1
+        for col in cols_note:
+            df_pas3[col] = (df_pas3[col] / 2).clip(lower=1).round(2)
+
 # ══════════════════════════════════════════════════════════════════
 # REZULTAT FINAL
 # df.head(nr) → primele nr rânduri din DataFrame
@@ -332,6 +346,8 @@ with col3:
             m = st.session_state.get(f"enc_{c}", "N/A")
             st.markdown(f"- `{c}` → **{m}**")
 
+    scala = st.session_state.get("scala_note", "Sistem portughez (0–20)")
+    st.markdown(f"- Note → **{scala}**")
     st.markdown(f"- Coloane finale: **{len(df_pas3.columns)}**")
 
 st.markdown("<br>", unsafe_allow_html=True)
