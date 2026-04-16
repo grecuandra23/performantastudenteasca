@@ -72,13 +72,9 @@ pct_meditatii = _pct_da(df, 'Meditatii_Private')
 pct_familie   = _pct_da(df, 'Ajutor_Familie')
 pct_bursa     = _pct_da(df, 'Meditatii_Scoala') if 'Meditatii_Scoala' in df.columns else None
 
-nota_ro = st.session_state.get("nota_ro_global", "Nu") == "Da" and mod_viz == "Date preprocesate"
-scala_max  = 10 if nota_ro else 20
-prag_prom  = 5  if nota_ro else 10
-
 c1, c2, c3 = st.columns(3)
 c1.metric("Total studenti", len(df))
-c2.metric("Medie nota finala", f"{df['Nota_Finala'].mean():.1f} / {scala_max}")
+c2.metric("Medie nota finala", f"{df['Nota_Finala'].mean():.1f} / 20")
 c3.metric("Varsta medie", f"{df['Varsta'].mean():.1f}")
 
 c4, c5, c6 = st.columns(3)
@@ -88,8 +84,8 @@ c6.metric("Medie absente", f"{df['Absente'].mean():.1f}")
 
 c7, c8, c9 = st.columns(3)
 c7.metric("Meditatii scoala", f"{pct_bursa:.1f}%" if pct_bursa is not None else "N/A")
-c8.metric(f"Promovati (≥{prag_prom})",  (df['Nota_Finala'] >= prag_prom).sum())
-c9.metric(f"Nepromovati (<{prag_prom})", (df['Nota_Finala'] <  prag_prom).sum())
+c8.metric("Promovati (≥10)", (df['Nota_Finala'] >= 10).sum())
+c9.metric("Nepromovati (<10)", (df['Nota_Finala'] < 10).sum())
 
 st.markdown("---")
 
