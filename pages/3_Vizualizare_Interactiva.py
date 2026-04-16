@@ -59,9 +59,9 @@ elif mod_viz == "Date preprocesate":
 # ══════════════════════════════════════════════════════════════════
 st.markdown("### Statistici generale")
 
-pct_meditatii = (df['Meditatii_Private'] == 'Da').sum() / len(df) * 100
-pct_familie   = (df['Ajutor_Familie'] == 'Da').sum() / len(df) * 100
-pct_bursa     = (df['Meditatii_Scoala'] == 'Da').sum() / len(df) * 100 if 'Meditatii_Scoala' in df.columns else 0
+pct_meditatii = ((df['Meditatii_Private'] == 'Da') | (df['Meditatii_Private'] == 0)).sum() / len(df) * 100
+pct_familie   = ((df['Ajutor_Familie'] == 'Da') | (df['Ajutor_Familie'] == 0)).sum() / len(df) * 100
+pct_bursa     = ((df['Meditatii_Scoala'] == 'Da') | (df['Meditatii_Scoala'] == 0)).sum() / len(df) * 100 if 'Meditatii_Scoala' in df.columns else 0
 
 c1, c2, c3 = st.columns(3)
 c1.metric("Total studenti", len(df))
@@ -75,8 +75,8 @@ c6.metric("Medie absente", f"{df['Absente'].mean():.1f}")
 
 c7, c8, c9 = st.columns(3)
 c7.metric("Meditatii scoala", f"{pct_bursa:.1f}%")
-c8.metric("Promovati (≥10)", (df['Nota_Finala'] >= 10).sum())
-c9.metric("Nepromovati (<10)", (df['Nota_Finala'] < 10).sum())
+c8.metric("Promovati (≥10)", ((df['Nota_Finala'] >= 10) | (df['Nota_Finala'] >= 5)).sum())
+c9.metric("Nepromovati (<10)", ((df['Nota_Finala'] < 10) & (df['Nota_Finala'] < 5)).sum())
 
 st.markdown("---")
 
