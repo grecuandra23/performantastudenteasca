@@ -75,8 +75,8 @@ c6.metric("Medie absente", f"{df['Absente'].mean():.1f}")
 
 c7, c8, c9 = st.columns(3)
 c7.metric("Meditatii scoala", f"{pct_bursa:.1f}%")
-c8.metric("Promovati (≥10)", ((df['Nota_Finala'] >= 10) | (df['Nota_Finala'] >= 5)).sum())
-c9.metric("Nepromovati (<10)", ((df['Nota_Finala'] < 10) & (df['Nota_Finala'] < 5)).sum())
+c8.metric("Promovati ", ((df['Nota_Finala'] >= 10) | (df['Nota_Finala'] >= 5)).sum())
+c9.metric("Nepromovati ", ((df['Nota_Finala'] < 10) & (df['Nota_Finala'] < 5)).sum())
 
 st.markdown("---")
 
