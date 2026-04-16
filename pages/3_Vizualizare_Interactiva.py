@@ -40,7 +40,7 @@ df_original = st.session_state["df"]
 df_procesat = st.session_state.get("df_procesat", None)
 
 # ── Selectare mod vizualizare ─────────────────────────────────────
-mod_viz = st.selectbox("Mod vizualizare:", ["Date originale", "Date preprocesate"], key="mod_viz_select")
+mod_viz = st.selectbox("Mod vizualizare:", ["Date originale", "Date preprocesate"])
 
 if mod_viz == "Date originale":
     df = df_original
