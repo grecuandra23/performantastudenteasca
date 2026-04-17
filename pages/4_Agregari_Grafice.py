@@ -176,7 +176,7 @@ col_stanga, col_dreapta = st.columns(2)
 with col_stanga:
     if col_grup_donut == 'Total':
         df_donut = df.copy()
-        df_donut['Status'] = df_donut['Nota_Finala'].apply(lambda x: 'Promovat' if x >= 10 else 'Respins')
+        df_donut['Status'] = df_donut['Nota_Finala'].apply(lambda x: 'Promovat' if x >= 10 or x >= 5 else 'Respins')
         counts = df_donut['Status'].value_counts().reset_index()
         counts.columns = ['Status', 'Count']
         fig_donut = px.pie(counts, names='Status', values='Count', hole=0.55,
@@ -184,7 +184,7 @@ with col_stanga:
                            color_discrete_sequence=["#660000", "#e8d5d5"])
     else:
         df_donut = df.copy()
-        df_donut['Status'] = df_donut['Nota_Finala'].apply(lambda x: 'Promovat' if x >= 10 else 'Respins')
+        df_donut['Status'] = df_donut['Nota_Finala'].apply(lambda x: 'Promovat' if x >= 10 or x >= 5 else 'Respins')
         counts = df_donut.groupby([col_grup_donut, 'Status']).size().reset_index(name='Count')
         fig_donut = px.sunburst(counts, path=[col_grup_donut, 'Status'], values='Count',
                                 title=f"Promovabilitate per {col_grup_donut}",
