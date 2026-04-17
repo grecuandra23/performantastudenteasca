@@ -169,7 +169,7 @@ colA, colB = st.columns(2)
 
 with colA:
     st.markdown("#### Grup A")
-    opt_A = st.selectbox("Valoare A", valori, key="A")
+    opt_A = st.selectbox("Valoare A", valori, index=0, key="A")
     idx_A = df_original[df_original[criteriu] == opt_A].index.intersection(df.index)
     df_A = df.loc[idx_A]
     st.metric("Nota medie A", f"{df_A['Nota_Finala'].mean():.2f}")
@@ -180,7 +180,7 @@ with colA:
 
 with colB:
     st.markdown("#### Grup B")
-    opt_B = st.selectbox("Valoare B", valori, key="B")
+    opt_B = st.selectbox("Valoare B", valori, index=min(1, len(valori)-1), key="B")
     idx_B = df_original[df_original[criteriu] == opt_B].index.intersection(df.index)
     df_B = df.loc[idx_B]
     st.metric("Nota medie B", f"{df_B['Nota_Finala'].mean():.2f}")

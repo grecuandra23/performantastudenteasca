@@ -53,6 +53,8 @@ else:
     df = df_original
     st.info("Afișezi date originale.")
 
+prag_trecere = 5 if df['Nota_Finala'].max() <= 10 else 10
+
 cols_numerice = [c for c in ['Varsta', 'Ore_Studiu', 'Materii_Picate', 'Timp_Liber',
                               'Iesiri', 'Alcool_Saptamana', 'Alcool_Weekend',
                               'Absente', 'Nota_T1', 'Nota_T2', 'Nota_Finala'] if c in df.columns]
@@ -80,7 +82,7 @@ with col_stanga1:
         color_discrete_sequence=["#660000"],
         opacity=0.6
     )
-    fig_scatter.add_hline(y=10, line_dash="dash", line_color="#aaa", annotation_text="Nota de trecere")
+    fig_scatter.add_hline(y=prag_trecere, line_dash="dash", line_color="#aaa", annotation_text="Nota de trecere")
     fig_scatter.update_layout(title_x=0.5, height=450, plot_bgcolor="#FAF8F5", paper_bgcolor="#FAF8F5")
     st.plotly_chart(fig_scatter, use_container_width=True)
 
@@ -102,7 +104,7 @@ with col_dreapta1:
         color_discrete_sequence=["#660000", "#cc4444", "#ff9999", "#994444"]
     )
     fig_bar.update_traces(textposition="outside")
-    fig_bar.add_hline(y=10, line_dash="dash", line_color="#aaa", annotation_text="Nota de trecere")
+    fig_bar.add_hline(y=prag_trecere, line_dash="dash", line_color="#aaa", annotation_text="Nota de trecere")
     fig_bar.update_layout(title_x=0.5, height=450, plot_bgcolor="#FAF8F5", paper_bgcolor="#FAF8F5", showlegend=False)
     st.plotly_chart(fig_bar, use_container_width=True)
 
@@ -140,7 +142,7 @@ fig_hist = px.histogram(
 )
 
 if col_hist in ['Nota_Finala', 'Nota_T1', 'Nota_T2']:
-    fig_hist.add_vline(x=10, line_dash="dash", line_color="#444",
+    fig_hist.add_vline(x=prag_trecere, line_dash="dash", line_color="#444",
                        annotation_text="Nota de trecere", annotation_position="top right")
 
 fig_hist.update_layout(title_x=0.5, height=420, plot_bgcolor="#FAF8F5", paper_bgcolor="#FAF8F5")
@@ -211,7 +213,7 @@ with col_dreapta:
         text="Medie"
     )
     fig_line.update_traces(textposition="top center")
-    fig_line.add_hline(y=10, line_dash="dash", line_color="#aaa", annotation_text="Nota de trecere")
+    fig_line.add_hline(y=prag_trecere, line_dash="dash", line_color="#aaa", annotation_text="Nota de trecere")
     fig_line.update_layout(title_x=0.5, height=420, plot_bgcolor="#FAF8F5", paper_bgcolor="#FAF8F5")
     st.plotly_chart(fig_line, use_container_width=True)
 
