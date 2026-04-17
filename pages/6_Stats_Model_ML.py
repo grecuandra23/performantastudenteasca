@@ -60,15 +60,10 @@ cols_numerice = [c for c in ['Varsta', 'Ore_Studiu', 'Materii_Picate', 'Timp_Lib
                               'Iesiri', 'Alcool_Saptamana', 'Alcool_Weekend',
                               'Absente', 'Nota_T1', 'Nota_T2'] if c in df.columns]
 
-# coloanele dummy le luăm din df-ul original (înainte de encoding)
-df_orig = st.session_state['df']
-cols_dummy = [c for c in df_orig.columns if df_orig[c].dtype == 'object' and df_orig[c].nunique() == 2]
-
 # ══════════════════════════════════════════════════════════════════
 # SECȚIUNEA 1 — CONFIGURARE MODEL
 # sm.add_constant() → adaugă coloana de interceptare (β₀)
 # sm.OLS(y, X).fit() → estimează coeficienții prin metoda celor mai mici pătrate
-# pd.get_dummies(drop_first=True) → codifică variabila dummy în 0/1
 # ══════════════════════════════════════════════════════════════════
 st.header("1 — Configurare regresie multiplă")
 
@@ -78,39 +73,19 @@ st.markdown("""
 `Y = β₀ + β₁·X₁ + β₂·X₂ + ... + βₙ·Xₙ + ε`
 """)
 
-c1, c2 = st.columns(2)
-with c1:
-    variabila_dep = st.selectbox("Variabilă dependentă:", ['Nota_Finala', 'Nota_T2', 'Nota_T1'])
-    predictori_num = st.multiselect(
-        "Variabile numerice:",
-        cols_numerice,
-        default=[c for c in ['Ore_Studiu', 'Absente', 'Nota_T1', 'Nota_T2'] if c in cols_numerice]
-    )
-with c2:
-    predictori_dummy = st.multiselect(
-        "Variabile dummy (categoriale 0/1):",
-        cols_dummy,
-        default=[]
-    )
+variabila_dep = st.selectbox("Variabilă dependentă:", ['Nota_Finala', 'Nota_T2', 'Nota_T1'])
+predictori_num = st.multiselect(
+    "Variabile numerice:",
+    cols_numerice,
+    default=[c for c in ['Ore_Studiu', 'Absente', 'Nota_T1', 'Nota_T2'] if c in cols_numerice]
+)
 
-if len(predictori_num) + len(predictori_dummy) < 1:
+if len(predictori_num) < 1:
     st.warning("Selectează cel puțin un predictor.")
     st.stop()
 
-# Construiește X: numerice din df procesat + dummies din df original aliniate pe index
-df_reg_num   = df[predictori_num + [variabila_dep]].copy() if predictori_num else df[[variabila_dep]].copy()
-df_reg_dummy = df_orig[predictori_dummy].copy() if predictori_dummy else pd.DataFrame(index=df_orig.index)
-
-# aliniază indexurile și elimină rândurile cu NaN
-df_combined = df_reg_num.join(df_reg_dummy, how='left').dropna()
-
-X_parts = [df_combined[predictori_num]] if predictori_num else []
-for col in predictori_dummy:
-    # drop_first=True → evită multicolinearitate perfectă (dummy trap)
-    dummies = pd.get_dummies(df_combined[col], prefix=col, drop_first=True).astype(int)
-    X_parts.append(dummies)
-
-X_raw = pd.concat(X_parts, axis=1) if X_parts else pd.DataFrame(index=df_combined.index)
+df_combined = df[predictori_num + [variabila_dep]].dropna()
+X_raw = df_combined[predictori_num]
 y     = df_combined[variabila_dep]
 
 # sm.add_constant → adaugă coloana "const" = 1 pentru interceptare
