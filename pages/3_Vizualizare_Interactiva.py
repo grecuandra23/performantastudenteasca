@@ -90,42 +90,42 @@ st.markdown("### Filtre")
 
 f1, f2, f3 = st.columns(3)
 with f1:
-    scoala_sel = st.multiselect("Scoala", df['Scoala'].unique(), default=df['Scoala'].unique())
+    scoala_sel = st.multiselect("Scoala", df_original['Scoala'].unique(), default=df_original['Scoala'].unique())
 with f2:
-    sex_sel = st.multiselect("Sex", df['Sex'].unique(), default=df['Sex'].unique())
+    sex_sel = st.multiselect("Sex", df_original['Sex'].unique(), default=df_original['Sex'].unique())
 with f3:
-    mediu_sel = st.multiselect("Mediu", df['Mediu'].unique(), default=df['Mediu'].unique())
+    mediu_sel = st.multiselect("Mediu", df_original['Mediu'].unique(), default=df_original['Mediu'].unique())
 
 f4, f5, f6 = st.columns(3)
 with f4:
-    meditatii_sel = st.multiselect("Meditatii private", df['Meditatii_Private'].unique(), default=df['Meditatii_Private'].unique())
+    meditatii_sel = st.multiselect("Meditatii private", df_original['Meditatii_Private'].unique(), default=df_original['Meditatii_Private'].unique())
 with f5:
-    internet_sel = st.multiselect("Internet", df['Internet'].unique(), default=df['Internet'].unique())
+    internet_sel = st.multiselect("Internet", df_original['Internet'].unique(), default=df_original['Internet'].unique())
 with f6:
     varsta_opt = st.selectbox("Varsta", ["Toate", "15-16", "17-18", "19+"])
 
 absente_range = st.slider(
     "Absente",
-    int(df['Absente'].min()),
-    int(df['Absente'].max()),
-    (int(df['Absente'].min()), int(df['Absente'].max()))
+    int(df_original['Absente'].min()),
+    int(df_original['Absente'].max()),
+    (int(df_original['Absente'].min()), int(df_original['Absente'].max()))
 )
 
 mask = (
-    df['Scoala'].isin(scoala_sel) &
-    df['Sex'].isin(sex_sel) &
-    df['Mediu'].isin(mediu_sel) &
-    df['Meditatii_Private'].isin(meditatii_sel) &
-    df['Internet'].isin(internet_sel) &
-    df['Absente'].between(absente_range[0], absente_range[1])
+    df_original['Scoala'].isin(scoala_sel) &
+    df_original['Sex'].isin(sex_sel) &
+    df_original['Mediu'].isin(mediu_sel) &
+    df_original['Meditatii_Private'].isin(meditatii_sel) &
+    df_original['Internet'].isin(internet_sel) &
+    df_original['Absente'].between(absente_range[0], absente_range[1])
 )
 
 if varsta_opt == "15-16":
-    mask &= df['Varsta'].between(15, 16)
+    mask &= df_original['Varsta'].between(15, 16)
 elif varsta_opt == "17-18":
-    mask &= df['Varsta'].between(17, 18)
+    mask &= df_original['Varsta'].between(17, 18)
 elif varsta_opt == "19+":
-    mask &= df['Varsta'] >= 19
+    mask &= df_original['Varsta'] >= 19
 
 df_filtrat = df.loc[mask]
 
@@ -162,14 +162,15 @@ criteriu = st.radio(
     key="criteriu_comp"
 )
 
-valori = list(df[criteriu].unique())
+valori = list(df_original[criteriu].unique())
 
 colA, colB = st.columns(2)
 
 with colA:
     st.markdown("#### Grup A")
     opt_A = st.selectbox("Valoare A", valori, key="A")
-    df_A = df[df[criteriu] == opt_A]
+    idx_A = df_original[df_original[criteriu] == opt_A].index
+    df_A = df.loc[idx_A]
     st.metric("Nota medie A", f"{df_A['Nota_Finala'].mean():.2f}")
     st.metric("Absente medii A", f"{df_A['Absente'].mean():.2f}")
     nr_A = st.slider("Randuri A", 1, len(df_A), min(10, len(df_A)), key="nrA")
@@ -179,7 +180,8 @@ with colA:
 with colB:
     st.markdown("#### Grup B")
     opt_B = st.selectbox("Valoare B", valori, key="B")
-    df_B = df[df[criteriu] == opt_B]
+    idx_B = df_original[df_original[criteriu] == opt_B].index
+    df_B = df.loc[idx_B]
     st.metric("Nota medie B", f"{df_B['Nota_Finala'].mean():.2f}")
     st.metric("Absente medii B", f"{df_B['Absente'].mean():.2f}")
     nr_B = st.slider("Randuri B", 1, len(df_B), min(10, len(df_B)), key="nrB")
