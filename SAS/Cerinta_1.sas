@@ -1,4 +1,4 @@
-LIBNAME proiect '/home/u64501251/Proiect';
+LIBNAME proiect '/home/u64505510/Proiect';
 
 PROC FORMAT;
     VALUE $sex_fmt   
@@ -22,7 +22,7 @@ PROC FORMAT;
 RUN;
 
 DATA proiect.studenti;
-    INFILE '/home/u64501251/Proiect/student_procesat.csv' DSD FIRSTOBS=2;
+    INFILE '/home/u64505510/Proiect/student_procesat.csv' DSD FIRSTOBS=2;
     INPUT Scoala    $
           Sex       $
           Varsta
