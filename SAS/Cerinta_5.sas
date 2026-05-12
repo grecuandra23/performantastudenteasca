@@ -1,4 +1,4 @@
-LIBNAME proiect '/home/u64501251/Proiect';
+LIBNAME proiect '/home/u64505510/Proiect';
 
 TITLE "Statistici descriptive - Scoala GP";
 PROC MEANS DATA=proiect.studenti_GP 
