@@ -1,4 +1,4 @@
-LIBNAME proiect '/home/u64501251/Proiect';
+LIBNAME proiect '/home/u64505510/Proiect';
 
 DATA proiect.consum_alcool;
     SET proiect.studenti2;
