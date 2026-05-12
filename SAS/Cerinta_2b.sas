@@ -1,4 +1,4 @@
-LIBNAME proiect '/home/u64501251/Proiect';
+LIBNAME proiect '/home/u64505510/Proiect';
 
 DATA proiect.ore_studiu_sim;
     SET proiect.studenti2;
