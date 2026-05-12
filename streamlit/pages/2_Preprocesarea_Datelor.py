@@ -155,6 +155,10 @@ cols_out = [
     "Absente", "Nota_T1", "Nota_T2", "Nota_Finala"
 ]
 
+for _col in cols_out:
+    if f"out_{_col}" not in st.session_state:
+        st.session_state[f"out_{_col}"] = "Capping la percentile"
+
 def aplica_metoda_outlier(df, col, metoda):
     q1 = df[col].quantile(0.25)
     q3 = df[col].quantile(0.75)
@@ -243,6 +247,10 @@ df_pas3 = df_pas2.copy()
 
 # select_dtypes(include='object') → selectează doar coloanele de tip string
 categorical_cols = list(df_pas3.select_dtypes(include='object').columns)
+
+for _col in categorical_cols:
+    if f"enc_{_col}" not in st.session_state:
+        st.session_state[f"enc_{_col}"] = "One-Hot Encoding" if _col == "Sex" else "Label Encoding"
 
 cols_per_row = 3
 for i in range(0, len(categorical_cols), cols_per_row):
