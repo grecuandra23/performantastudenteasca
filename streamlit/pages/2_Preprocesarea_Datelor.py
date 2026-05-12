@@ -150,14 +150,14 @@ st.markdown("---")
 st.header("Pasul 2 — Tratarea outlierilor")
 
 cols_out = [
-    "Ore_Studiu", "Materii_Picate", "Timp_Liber",
+    "Varsta", "Ore_Studiu", "Materii_Picate", "Timp_Liber",
     "Iesiri", "Alcool_Saptamana", "Alcool_Weekend",
     "Absente", "Nota_T1", "Nota_T2", "Nota_Finala"
 ]
 
 for _col in cols_out:
     if f"out_{_col}" not in st.session_state:
-        st.session_state[f"out_{_col}"] = "Capping la percentile"
+        st.session_state[f"out_{_col}"] = "Elimină rândurile outlieri" if _col == "Varsta" else "Capping la percentile"
 
 def aplica_metoda_outlier(df, col, metoda):
     q1 = df[col].quantile(0.25)
