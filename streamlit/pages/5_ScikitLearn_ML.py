@@ -68,7 +68,7 @@ with c1:
     cols_cluster = st.multiselect(
         "Variabile pentru clustering:",
         cols_numerice,
-        default=['Ore_Studiu', 'Absente', 'Nota_Finala']
+        default=['Ore_Studiu', 'Absente', 'Nota_Finala', 'Materii_Picate']
     )
 with c2:
     metoda_link = st.selectbox("Metodă linkage:", ["ward", "complete", "average", "single"])

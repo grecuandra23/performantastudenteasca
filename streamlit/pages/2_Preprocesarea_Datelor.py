@@ -150,7 +150,7 @@ st.markdown("---")
 st.header("Pasul 2 — Tratarea outlierilor")
 
 cols_out = [
-    "Varsta", "Ore_Studiu", "Materii_Picate", "Timp_Liber",
+    "Ore_Studiu", "Materii_Picate", "Timp_Liber",
     "Iesiri", "Alcool_Saptamana", "Alcool_Weekend",
     "Absente", "Nota_T1", "Nota_T2", "Nota_Finala"
 ]
@@ -209,6 +209,7 @@ for col in cols_out:
             st.selectbox(
                 "Metodă:",
                 ["Păstrează toți outlierii", "Elimină rândurile outlieri", "Capping la percentile"],
+                index=2,
                 key=f"out_{col}"
             )
 
@@ -249,9 +250,11 @@ for i in range(0, len(categorical_cols), cols_per_row):
     row_cols = st.columns(cols_per_row)
     for j, col in enumerate(grup):
         with row_cols[j]:
+            default_enc_idx = 1 if col == "Sex" else 0
             st.selectbox(
                 f"{col}",
                 ["Label Encoding", "One-Hot Encoding", "Nu modifica"],
+                index=default_enc_idx,
                 key=f"enc_{col}"
             )
 
