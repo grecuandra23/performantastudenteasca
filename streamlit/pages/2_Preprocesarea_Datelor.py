@@ -284,6 +284,8 @@ for col in categorical_cols:
 # Scala note (Nota_T1, Nota_T2, Nota_Finala)
 cols_note = [c for c in ["Nota_T1", "Nota_T2", "Nota_Finala"] if c in df_pas3.columns]
 if cols_note:
+    if "scala_note" not in st.session_state:
+        st.session_state["scala_note"] = "Sistem românesc (1–10)"
     st.markdown("**Scale note**")
     scala_note = st.selectbox(
         "Nota_T1 / Nota_T2 / Nota_Finala",
