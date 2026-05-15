@@ -155,9 +155,15 @@ cols_out = [
     "Absente", "Nota_T1", "Nota_T2", "Nota_Finala"
 ]
 
+_cols_pastreaza = {"Ore_Studiu", "Materii_Picate", "Iesiri", "Timp_Liber", "Nota_T1", "Nota_Finala"}
 for _col in cols_out:
     if f"out_{_col}" not in st.session_state:
-        st.session_state[f"out_{_col}"] = "Elimină rândurile outlieri" if _col == "Varsta" else "Capping la percentile"
+        if _col == "Varsta":
+            st.session_state[f"out_{_col}"] = "Elimină rândurile outlieri"
+        elif _col in _cols_pastreaza:
+            st.session_state[f"out_{_col}"] = "Păstrează toți outlierii"
+        else:
+            st.session_state[f"out_{_col}"] = "Capping la percentile"
 
 def aplica_metoda_outlier(df, col, metoda):
     q1 = df[col].quantile(0.25)
