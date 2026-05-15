@@ -155,7 +155,7 @@ cols_out = [
     "Absente", "Nota_T1", "Nota_T2", "Nota_Finala"
 ]
 
-_cols_pastreaza = {"Ore_Studiu", "Materii_Picate", "Iesiri", "Timp_Liber", "Nota_T1", "Nota_Finala"}
+_cols_pastreaza = {"Ore_Studiu", "Materii_Picate", "Iesiri", "Nota_T1", "Nota_Finala"}
 for _col in cols_out:
     if f"out_{_col}" not in st.session_state:
         if _col == "Varsta":
